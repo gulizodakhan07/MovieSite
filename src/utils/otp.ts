@@ -1,4 +1,4 @@
-import { CreateUserDto } from "src/modules/user/dto";
+import { CreateUserDto } from 'src/modules/user/dto';
 
 export const otpStore = new Map<string, string>();
 export const temporaryUserData = new Map<string, CreateUserDto>();

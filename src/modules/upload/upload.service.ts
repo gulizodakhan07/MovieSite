@@ -3,7 +3,14 @@ import * as path from 'path';
 import { Injectable } from '@nestjs/common';
 
 import { existsSync } from 'fs';
-import { RemoveFileRequest, RemoveFileResponse, UploadFileRequest, UploadFileResponse } from './interface';
+import {
+  UploadFileRequest,
+  UploadFileResponse,
+} from './interface/uploadFile.interface';
+import {
+  RemoveFileRequest,
+  RemoveFileResponse,
+} from './interface/removeFile.interface';
 // upload.service
 @Injectable()
 export class UploadService {
@@ -16,24 +23,15 @@ export class UploadService {
     const fileName = payload.file.fieldname + '-' + uniqueSuffix + extName;
 
     // GET FILE'S FULL PATH
-    const uploadDir = path.join(
-      __dirname,
-      '../../../',
-      payload.destination,
-
-    )
-    console.log(uploadDir)
-    const fullFilePath = path.join(
-      uploadDir,
-      fileName
-    );
-    console.log(fullFilePath)
-
+    const uploadDir = path.join(__dirname, '../../../', payload.destination);
+    console.log(uploadDir);
+    const fullFilePath = path.join(uploadDir, fileName);
+    console.log(fullFilePath);
 
     // CREATE UPLOAD FOLDER IF DESTINATION IS NOT FOUND
     if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
-      }
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
 
     // WRITE FILE TO DESTINATION
     fs.writeFileSync(fullFilePath, payload.file.buffer);

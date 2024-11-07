@@ -1,18 +1,22 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { CreateMovieRequest, UpdateMovieRequest } from '../interface';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { UpdateMovieRequest } from '../interface/updateMovie.interface';
 
-export class UpdateMovieDto implements Omit<UpdateMovieRequest,'id'> {
-    @IsString()
-    @IsNotEmpty()
-    title: string;
+export class UpdateMovieDto implements Omit<UpdateMovieRequest, 'id'> {
+  @IsString()
+  @IsOptional()
+  title: string;
 
-    @IsString()
-    @IsNotEmpty()
-    description: string;
+  @IsString()
+  @IsOptional()
+  description: string;
 
-    @IsNumber()
-    @IsNotEmpty()
-    releaseYear: number;
-    image: any
-    video: any
+  @IsString()
+  @IsOptional()
+  genre: string;
+
+  @IsNumber()
+  @IsOptional()
+  releaseYear: number;
+  image: any;
+  video: any;
 }

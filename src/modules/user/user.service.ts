@@ -1,18 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { InjectModel } from '@nestjs/sequelize';
-import { User } from './model';
 import { generateOtp, temporaryUserData, otpStore } from 'src/utils/otp';
-import { sendMail } from 'src/utils/email';
 import { UploadService } from '../upload/upload.service';
+import { sendMail } from 'src/utils/email';
+import { User } from './model/user.model';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User) private userModel: typeof User, private uploadService: UploadService) { }
+  findById(userId: number) {
+    throw new Error('Method not implemented.');
+  }
+  constructor(
+    @InjectModel(User) private userModel: typeof User,
+    private uploadService: UploadService,
+  ) {}
   async create(payload: CreateUserDto) {
     const { name, email, isPremium, role } = payload;
     try {
-      console.log(payload.image)
+      console.log(payload.image);
       const checkUser = await this.userModel.findOne({ where: { email } });
       if (checkUser) {
         return {
@@ -23,19 +29,22 @@ export class UserService {
       const otp = generateOtp(email);
       otpStore.set(email, otp);
 
-      const options = { to: email, subject: 'OTP kodingiz', text: `Kodingiz: ${otp}` };
+      const options = {
+        to: email,
+        subject: 'OTP kodingiz',
+        text: `Kodingiz: ${otp}`,
+      };
       const success = await sendMail(options);
 
       temporaryUserData.set(email, payload);
 
       return {
-        message: 'Emailingizga OTP yuborildi. Tasdiqlash uchun kodingizni kiriting.',
+        message:
+          'Emailingizga OTP yuborildi. Tasdiqlash uchun kodingizni kiriting.',
         statusCode: 200,
       };
-
     } catch (error) {
-      console.log(error)
-
+      console.log(error);
     }
   }
 
@@ -57,10 +66,12 @@ export class UserService {
         };
       }
 
-      const imageUrl = userData.image ? await this.uploadService.uploadFile({
-        file: userData.image,
-        destination: 'uploads/user'
-      }) : null;
+      const imageUrl = userData.image
+        ? await this.uploadService.uploadFile({
+            file: userData.image,
+            destination: 'uploads/user',
+          })
+        : null;
 
       const newUser = await this.userModel.create({
         ...userData,
@@ -75,13 +86,10 @@ export class UserService {
         statusCode: 201,
         user: newUser,
       };
-
     } catch (error) {
-      console.log(error)
-
+      console.log(error);
     }
   }
-
 
   async findAll() {
     return await this.userModel.findAll();
@@ -92,59 +100,58 @@ export class UserService {
   }
 
   async update(id: number, updatedPayload: UpdateUserDto) {
-    const foundedUser = await this.userModel.findByPk(id)
+    const foundedUser = await this.userModel.findByPk(id);
     if (!foundedUser) {
       return {
         message: 'Foydalanuvchi topilmadi',
-        statusCode: 404
-      }
+        statusCode: 404,
+      };
     }
 
     if (updatedPayload.image) {
       if (foundedUser.image) {
-        await this.uploadService.removeFile({ fileName: foundedUser.image })
+        await this.uploadService.removeFile({ fileName: foundedUser.image });
       }
     }
-    let updatedImageUrl = null
+    let updatedImageUrl = null;
     if (updatedPayload.image) {
       const image = await this.uploadService.uploadFile({
         file: updatedPayload.image,
-        destination: 'uploads/user'
-      })
-      updatedImageUrl = image.imageUrl
-
+        destination: 'uploads/user',
+      });
+      updatedImageUrl = image.imageUrl;
     }
-    await this.userModel.update({
-      name: updatedPayload?.name || foundedUser.name,
-      email: updatedPayload?.email || foundedUser.email,
-      isPremium: updatedPayload?.isPremium || foundedUser.isPremium,
-      image: updatedImageUrl ? updatedImageUrl : foundedUser.image,
-      role: updatedPayload?.role || foundedUser.role
-    }, { where: { id: id } });
+    await this.userModel.update(
+      {
+        name: updatedPayload?.name || foundedUser.name,
+        email: updatedPayload?.email || foundedUser.email,
+        isPremium: updatedPayload?.isPremium || foundedUser.isPremium,
+        image: updatedImageUrl ? updatedImageUrl : foundedUser.image,
+        role: updatedPayload?.role || foundedUser.role,
+      },
+      { where: { id: id } },
+    );
 
     return {
       message: 'User successfully updated',
-    }
+    };
   }
 
   async remove(id: number) {
-    const user = await this.userModel.findByPk(id)
+    const user = await this.userModel.findByPk(id);
     if (!user) {
       return {
         message: 'Foydalanuvchi topilmadi',
-        statusCode: 404
-      }
+        statusCode: 404,
+      };
     }
     if (user.image) {
-      await this.uploadService.removeFile({ fileName: user.image })
+      await this.uploadService.removeFile({ fileName: user.image });
     }
     await this.userModel.destroy({ where: { id } });
-    
+
     return {
-      message: "success"
-    }
+      message: 'success',
+    };
   }
-
 }
-
-

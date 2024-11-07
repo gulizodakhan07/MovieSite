@@ -1,13 +1,17 @@
 import { Op } from 'sequelize';
-import { Movie } from '../modules/movie/model';
-export const searchMovies = async (query: string): Promise<Movie[]> => {
+import { Movie } from 'src/modules/movie/model/movie.model';
 
-    return await Movie.findAll(
-        {
-            where:
-            {
-                title: { [Op.like]: `%${query}%` },
-                description: { [Op.like]: `%${query}%` },
-            }
-        });
+export const searchMovies = async (query: string): Promise<any> => {
+  if (!query || query.trim() === '') {
+    throw new Error('Query parametri kiritilishi kerak!');
+  }
+
+  return Movie.findAll({
+    where: {
+      [Op.or]: [
+        { title: { [Op.iLike]: `%${query}%` } },
+        { description: { [Op.iLike]: `%${query}%` } },
+      ],
+    },
+  });
 };

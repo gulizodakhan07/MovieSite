@@ -1,18 +1,28 @@
 // user.controller.ts
-import { Controller, Post, Body, Get, Param, Put, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Put,
+  Delete,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Protected, Roles } from 'src/decorators';
-import { UserRoles } from './model';
+import { UserRoles } from './model/user.model';
+import { Roles } from 'src/decorators/role.decorator';
+import { Protected } from 'src/decorators/protected.decorator';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-
   // @Protected(true)
-  @Roles([UserRoles.admin,UserRoles.user])
+  @Roles([UserRoles.admin, UserRoles.user])
   @Post('/add')
   @UseInterceptors(FileInterceptor('image'))
   async create(
@@ -26,22 +36,22 @@ export class UserController {
   }
 
   // @Protected(true)
-  @Roles([UserRoles.admin,UserRoles.user])
+  // @Roles([UserRoles.admin,UserRoles.user])
   @Post('verify')
   async verifyOtp(@Body() body: { email: string; otp: string }) {
     const { email, otp } = body;
     return await this.userService.verifyOtp(email, otp);
   }
 
-  @Protected(true)
-  @Roles([UserRoles.admin])
+  // @Protected(true)
+  // @Roles([UserRoles.admin])
   @Get()
   async findAll() {
     return await this.userService.findAll();
   }
 
-  @Protected(true)
-  @Roles([UserRoles.admin])
+  // @Protected(true)
+  // @Roles([UserRoles.admin])
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return await this.userService.findOne(id);
@@ -51,7 +61,11 @@ export class UserController {
   @Roles([UserRoles.admin])
   @Put(':id')
   @UseInterceptors(FileInterceptor('image'))
-  async update(@Param('id') id: number, @Body() payload: UpdateUserDto,@UploadedFile() image: Express.Multer.File,) {
+  async update(
+    @Param('id') id: number,
+    @Body() payload: UpdateUserDto,
+    @UploadedFile() image: Express.Multer.File,
+  ) {
     if (image) {
       payload.image = image;
     }

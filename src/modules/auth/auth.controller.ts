@@ -1,63 +1,109 @@
+// // import { Body, Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
+// // import { AuthService } from "./auth.service";
+// // import { AuthGuard } from "@nestjs/passport";
+// // import {Response} from 'express'
+// // @Controller('auth')
+// // export class AuthController{
+// //     constructor(private authService: AuthService){}
+
+// //     @UseGuards(AuthGuard('google'))
+// //     @Get("/google")
+// //     googleAuth(){}
+
+// //     @UseGuards(AuthGuard('google'))
+// //     @Get('/google/sign-in')
+// //     async googleAuthCallback(@Req() request: any,@Res() response: Response){
+// //         return await this.authService.googleAuth(request,response)
+
+// //     }
+
+// //     @Post('login')
+// //     async login(@Body() email: string){
+// //         return await this.authService.login(email)
+// //     }
+// //     @Post('login-verify')
+// //     async loginOtp(@Body() body: {email: string,otp: string}){
+// //         const {email,otp} = body
+// //         return await this.authService.verifyLoginOtp(email,otp)
+// //     }
+// // }
+
 // import { Body, Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
 // import { AuthService } from "./auth.service";
 // import { AuthGuard } from "@nestjs/passport";
-// import {Response} from 'express'
+// import { Response } from 'express';
+
 // @Controller('auth')
-// export class AuthController{
-//     constructor(private authService: AuthService){}
-    
+// export class AuthController {
+//     constructor(private authService: AuthService) {}
+
 //     @UseGuards(AuthGuard('google'))
-//     @Get("/google")
-//     googleAuth(){}
+//     @Get('/google')
+//     googleAuth() {}
 
 //     @UseGuards(AuthGuard('google'))
 //     @Get('/google/sign-in')
-//     async googleAuthCallback(@Req() request: any,@Res() response: Response){
-//         return await this.authService.googleAuth(request,response)
-
+//     async googleAuthCallback(@Req() req: any, @Res() res: Response) {
+//         return await this.authService.googleAuth(req, res);
 //     }
 
 //     @Post('login')
-//     async login(@Body() email: string){
-//         return await this.authService.login(email)
+//     async login(@Body() email: string) {
+//         return await this.authService.login(email);
 //     }
+
 //     @Post('login-verify')
-//     async loginOtp(@Body() body: {email: string,otp: string}){
-//         const {email,otp} = body
-//         return await this.authService.verifyLoginOtp(email,otp)
+//     async loginOtp(@Body() body: { email: string, otp: string }) {
+//         const { email, otp } = body;
+//         return await this.authService.verifyLoginOtp(email, otp);
+//     }
+//     @Post('refresh-token')
+//     async refresh(@Body() token: string,@Res() res){
+//         return await this.authService.refreshAccessToken(token,res)
 //     }
 // }
 
-
-
-
-import { Body, Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
-import { AuthService } from "./auth.service";
-import { AuthGuard } from "@nestjs/passport";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
-    @UseGuards(AuthGuard('google'))
-    @Get('/google')
-    googleAuth() {}
+  @UseGuards(AuthGuard('google'))
+  @Get('/google')
+  googleAuth() {}
 
-    @UseGuards(AuthGuard('google'))
-    @Get('/google/sign-in')
-    async googleAuthCallback(@Req() req: any, @Res() res: Response) {
-        return await this.authService.googleAuth(req, res);
-    }
+  @UseGuards(AuthGuard('google'))
+  @Get('/google/sign-in')
+  async googleAuthCallback(@Req() req: any, @Res() res: Response) {
+    return await this.authService.googleAuth(req, res);
+  }
 
-    @Post('login')
-    async login(@Body('email') email: string) {
-        return await this.authService.login(email);
-    }
+  @Post('login')
+  async login(@Body('email') email: string) {
+    return await this.authService.login(email);
+  }
 
-    @Post('login-verify')
-    async loginOtp(@Body() body: { email: string, otp: string }) {
-        const { email, otp } = body;
-        return await this.authService.verifyLoginOtp(email, otp);
-    }
+  @Post('login-verify')
+  async loginOtp(@Body() body: { email: string; otp: string }) {
+    const { email, otp } = body;
+    return await this.authService.verifyLoginOtp(email, otp);
+  }
+
+  @Post('refresh-token')
+  async refresh(@Body() body: { refreshToken: string }, @Res() res: Response) {
+    const { refreshToken } = body;
+    return await this.authService.refreshAccessToken(refreshToken, res);
+  }
 }
