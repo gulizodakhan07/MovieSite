@@ -22,6 +22,8 @@ import { AppController } from './app.controller';
 import { ActorModule } from './modules/actor/actor.module';
 import { Actor } from './modules/actor/model/actor.model';
 import { ActorMovie } from './modules/actor/model/actorMovie.model';
+import { Subscription } from './modules/subscription/model/subscription.model';
+import { SubscriptionModule } from './modules/subscription/subscription.module';
 
 @Module({
   imports: [
@@ -42,7 +44,7 @@ import { ActorMovie } from './modules/actor/model/actorMovie.model';
             username: config.get<string>('dbConfig.user'),
             password: config.get<string>('dbConfig.password'),
             database: config.get('dbConfig.dbName'),
-            models: [User, Device, Movie, Category,Actor,ActorMovie],
+            models: [User, Device, Movie, Category,Actor,ActorMovie,Subscription],
             // synchronize: true,
             // sync: {force: true},
             logging: console.log,
@@ -65,7 +67,8 @@ import { ActorMovie } from './modules/actor/model/actorMovie.model';
     DeviceDetectionModule,
     DeviceModule,
     CategoryModule,
-    ActorModule
+    ActorModule,
+    SubscriptionModule
   ],
   controllers: [AppController],
   providers: [

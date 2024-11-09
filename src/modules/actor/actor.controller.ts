@@ -24,8 +24,8 @@ export class ActorController {
     }
 
 
-    @Protected(true)
-    @Roles([UserRoles.admin])
+    // @Protected(true)
+    // @Roles([UserRoles.admin])
     @Put('update/:id')
     @UseInterceptors(FileInterceptor('image'))
     async update(
@@ -48,8 +48,8 @@ export class ActorController {
         return await this.service.getActorWithMovies(id)
 
     }
-    @Protected(true)
-    @Roles([UserRoles.admin])
+    // @Protected(true)
+    // @Roles([UserRoles.admin])
     @Delete('delete/:id')
     async deleteActor(@Param('id', ParseIntPipe) id: number) {
         return await this.service.delete(id)

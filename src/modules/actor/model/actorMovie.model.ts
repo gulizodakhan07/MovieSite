@@ -6,11 +6,11 @@ import { Movie } from 'src/modules/movie/model/movie.model';  // Movie modeli
 export class ActorMovie extends Model {
   // Foreign Key for Actor
   @ForeignKey(() => Actor)
-  @Column({ type: DataType.BIGINT, allowNull: false })
+  @Column({ type: DataType.BIGINT, allowNull: false,primaryKey: true,autoIncrement: true })
   actorId: number;
 
   // Foreign Key for Movie
   @ForeignKey(() => Movie)
-  @Column({ type: DataType.BIGINT, allowNull: false })
+  @Column({ type: DataType.BIGINT, allowNull: false})
   movieId: number;
 }
