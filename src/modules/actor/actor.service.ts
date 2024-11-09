@@ -29,39 +29,22 @@ export class ActorService {
             image: imageUrl?.imageUrl || null,
         });
 
-        if (payload.movieId && Array.isArray(payload.movieId) && payload.movieId.length > 0) {
             const movies = await this.actorMovieModel.findAll({
                 where: {
                     id: { [Op.in]: payload.movieId },
                 },
             });
 
-            // Tekshiruvlar uchun konsolga chop etish
             console.log(movies);
 
-            // Bir vaqtning o'zida bir nechta yozuv qo'shish uchun bulkCreate qo'llaniladi
 
             console.log("ulanmoqda")
             const result = await this.assignMovieToActor(actor.id, payload.movieId);
             console.log("assign:", result)
-        }
+        
 
         return actor;
     }
-
-    // async assignMovieToActor(actorId: number, movieIds: number[]): Promise<Actor> {
-    //     const actor = await this.actorModel.findByPk(actorId);
-
-    //     if (actor) {
-    //         const movieAssignments = movieIds.map(movieId => ({
-    //             actorId: actorId,
-    //             movieId: movieId,
-    //         }));
-    //         await this.actorMovieModel.bulkCreate(movieAssignments);
-    //     }
-
-    //     return actor;
-    // }
 
 
     async assignMovieToActor(actorId: number, movieId: number[]): Promise<Actor> {
