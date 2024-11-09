@@ -13,8 +13,8 @@ export class ActorController {
     constructor(private service: ActorService) { }
 
 
-    @Protected(true)
-    @Roles([UserRoles.admin])
+    // @Protected(true)
+    // @Roles([UserRoles.admin])
     @Post('add')
     @UseInterceptors(FileInterceptor('image'))
     async create(
@@ -40,9 +40,14 @@ export class ActorController {
 
     @Get()
     async getAll() {
-        return await this.getAll()
+        return await this.service.getAll()
     }
 
+    @Get(':id')
+    async getActorWithMovies(@Param('id',ParseIntPipe) id: number){
+        return await this.service.getActorWithMovies(id)
+
+    }
     @Protected(true)
     @Roles([UserRoles.admin])
     @Delete('delete/:id')

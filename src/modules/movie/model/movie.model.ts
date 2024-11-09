@@ -7,6 +7,8 @@ import {
   Table,
   BelongsToMany,
 } from 'sequelize-typescript';
+import { Actor } from 'src/modules/actor/model/actor.model';
+import { ActorMovie } from 'src/modules/actor/model/actorMovie.model';
 import { Category } from 'src/modules/category/model/category.model';
 
 @Table({ tableName: 'movie', timestamps: true })
@@ -39,6 +41,6 @@ export class Movie extends Model {
   @BelongsTo(() => Category)
   category: Category;
 
-  // @BelongsToMany(() => Actor, () => ActorMovie)
-  // actors: Actor[];
+  @BelongsToMany(() => Actor, () => ActorMovie)
+  actors: Actor[];
 }

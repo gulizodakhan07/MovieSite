@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { CreateActorrequest } from "../interfaces/createActor.interface";
 
 export class CreateActorDto implements Omit<CreateActorrequest,'id'>{
@@ -10,4 +10,7 @@ export class CreateActorDto implements Omit<CreateActorrequest,'id'>{
     @IsNotEmpty()
     bio: string
     image: any
+
+    @IsOptional()
+    movieIds?: number[];
 }

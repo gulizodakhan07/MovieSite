@@ -5,9 +5,10 @@ import { ActorService } from "./actor.service";
 import { ActorController } from "./actor.controller";
 import { UploadModule } from "../upload/upload.module";
 import { UploadService } from "../upload/upload.service";
+import { ActorMovie } from "./model/actorMovie.model";
 
 @Module({
-    imports: [SequelizeModule.forFeature([Actor]),UploadModule],
+    imports: [SequelizeModule.forFeature([Actor,ActorMovie]),UploadModule],
     providers: [ActorService,UploadService],
     controllers: [ActorController]
     

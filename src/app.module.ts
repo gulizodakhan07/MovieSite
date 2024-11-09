@@ -21,6 +21,7 @@ import { CheckRoleGuard } from './guard/check-role.guard';
 import { AppController } from './app.controller';
 import { ActorModule } from './modules/actor/actor.module';
 import { Actor } from './modules/actor/model/actor.model';
+import { ActorMovie } from './modules/actor/model/actorMovie.model';
 
 @Module({
   imports: [
@@ -41,7 +42,7 @@ import { Actor } from './modules/actor/model/actor.model';
             username: config.get<string>('dbConfig.user'),
             password: config.get<string>('dbConfig.password'),
             database: config.get('dbConfig.dbName'),
-            models: [User, Device, Movie, Category,Actor],
+            models: [User, Device, Movie, Category,Actor,ActorMovie],
             // synchronize: true,
             // sync: {force: true},
             logging: console.log,
