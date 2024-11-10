@@ -20,7 +20,7 @@ export class ActorController {
     async create(
         @Body() payload: CreateActorDto,
         @UploadedFile() image: Express.Multer.File) {
-        return await this.service.create({ ...payload, image })
+        return await this.service.create({...payload, image })
     }
 
 

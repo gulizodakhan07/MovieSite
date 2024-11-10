@@ -12,5 +12,5 @@ export class CreateActorDto implements Omit<CreateActorrequest,'id'>{
     image: any
 
     @IsOptional()
-    movieIds?: number[];
+    movieId?: number[];
 }

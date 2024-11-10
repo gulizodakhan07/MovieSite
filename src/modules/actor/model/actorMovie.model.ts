@@ -1,16 +1,14 @@
-import { Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { Actor } from './actor.model';  // Actor modeli
-import { Movie } from 'src/modules/movie/model/movie.model';  // Movie modeli
+import { Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { Movie } from "src/modules/movie/model/movie.model";
+import { Actor } from "./actor.model";
 
 @Table({ tableName: 'actor_movies', timestamps: false })
 export class ActorMovie extends Model {
-  // Foreign Key for Actor
   @ForeignKey(() => Actor)
-  @Column({ type: DataType.BIGINT, allowNull: false,primaryKey: true,autoIncrement: true })
+  @Column({ type: DataType.BIGINT, allowNull: false})
   actorId: number;
 
-  // Foreign Key for Movie
   @ForeignKey(() => Movie)
-  @Column({ type: DataType.BIGINT, allowNull: false})
-  movieId: number;
+  @Column({ type: DataType.BIGINT, allowNull: false })
+  movieId: number;  // movieId faqat bitta raqam
 }

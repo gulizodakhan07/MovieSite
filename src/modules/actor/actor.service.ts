@@ -15,55 +15,76 @@ export class ActorService {
         @InjectModel(ActorMovie) private actorMovieModel: typeof ActorMovie,
         private uploadService: UploadService) { }
 
-    async create(payload: CreateActorrequest) {
-        const imageUrl = payload.image
-            ? await this.uploadService.uploadFile({
-                file: payload.image,
-                destination: 'uploads/actor',
-            })
-            : null;
-
-        const actor = await this.actorModel.create({
-            name: payload.name,
-            bio: payload.bio,
-            image: imageUrl?.imageUrl || null,
-        });
-
+        async create(payload: CreateActorrequest) {
+            const imageUrl = payload.image
+                ? await this.uploadService.uploadFile({
+                    file: payload.image,
+                    destination: 'uploads/actor',
+                })
+                : null;
+        
+            const actor = await this.actorModel.create({
+                name: payload.name,
+                bio: payload.bio,
+                image: imageUrl?.imageUrl || null,
+            });
+        
+            let movieIds: number[] = [];
+        
+            if (Array.isArray(payload.movieId)) {
+                movieIds = payload.movieId
+                    .map(id => Number(id))     
+                    .filter(id => !isNaN(id));   
+            } else {
+                const id = Number(payload.movieId);
+                if (!isNaN(id)) {
+                    movieIds = [id];
+                }
+            }
+        
+            console.log("MovieIds:", movieIds);  
+        
             const movies = await this.actorMovieModel.findAll({
                 where: {
-                    id: { [Op.in]: payload.movieId },
+                    movieId: { [Op.in]: movieIds },
                 },
             });
-
-            console.log(movies);
-
-
-            console.log("ulanmoqda")
-            const result = await this.assignMovieToActor(actor.id, payload.movieId);
-            console.log("assign:", result)
         
-
-        return actor;
-    }
-
-
-    async assignMovieToActor(actorId: number, movieId: number[]): Promise<Actor> {
-        console.log("ulandi")
-        const actor = await this.actorModel.findByPk(actorId);
-        console.log("dfssssssssssssssssssssssss", actor.id)
-
-        if (actor) {
-            for (const movie of movieId) {
-                await this.actorMovieModel.create({
-                    actorId: actorId,
-                    movieId: movie,
-                });
-                console.log(`actorId: ${actorId} \n movieId: ${movieId}`)
+            if (movies.length === 0) {
+                console.log("No movies found for the provided movieIds.");
+            } else {
+                console.log("Movies found:", movies);
             }
+        
+            console.log("ulanmoqda");
+            const result = await this.assignMovieToActor(actor.id, movieIds);
+            console.log("assign:", result);
+        
+            return actor;
         }
-
-        return actor;
-    }
+        
+        async assignMovieToActor(actorId: number, movieIds: number[]): Promise<Actor> {
+            console.log("ulandi");
+            const actor = await this.actorModel.findByPk(actorId);
+            if (!actor) {
+                throw new Error(`Actor with ID ${actorId} not found.`);
+            }
+        
+            console.log("Actor ID:", actor.id);
+        
+            if (actor) {
+                for (const movie of movieIds) {
+                    await this.actorMovieModel.create({
+                        actorId: actorId,
+                        movieId: movie,
+                    });
+                    console.log(`Assigned actorId: ${actorId} to movieId: ${movie}`);
+                }
+            }
+        
+            return actor;
+        }
+        
 
 
 

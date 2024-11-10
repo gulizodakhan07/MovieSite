@@ -15,7 +15,7 @@ export class SubscriptionController{
     async update(@Param('id',ParseIntPipe) id: number,@Body() payload: UpdateSubscriptionDto){
         return await this.service.update(id,payload)
     }
-    @Delete()
+    @Delete('delete/:id')
     async delete(@Param('id',ParseIntPipe) id: number){
         return await this.service.delete(id)
     }
