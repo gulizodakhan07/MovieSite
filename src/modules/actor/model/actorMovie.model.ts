@@ -10,5 +10,5 @@ export class ActorMovie extends Model {
 
   @ForeignKey(() => Movie)
   @Column({ type: DataType.BIGINT, allowNull: false })
-  movieId: number;  // movieId faqat bitta raqam
+  movieId: number;
 }
