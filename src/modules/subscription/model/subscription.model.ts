@@ -15,4 +15,6 @@ export class Subscription extends Model {
     endDate: string
 
     
+
+    
 }

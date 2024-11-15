@@ -5,7 +5,7 @@ import { ActorMovie } from "./actorMovie.model";
 @Table({ tableName: 'actors', timestamps: true })
 export class Actor extends Model {
 
-    @Column({ type: DataType.BIGINT, autoIncrement: true, primaryKey: true })
+    @Column({ type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
     id: number
 
     @Column({ type: DataType.STRING, allowNull: false })

@@ -6,7 +6,6 @@ import { UploadService } from "../upload/upload.service";
 import { UpdateActorRequest } from "./dto/update-actor";
 import { Movie } from "../movie/model/movie.model";
 import { ActorMovie } from "./model/actorMovie.model";
-import { Op } from "sequelize";
 
 @Injectable()
 export class ActorService {
@@ -22,7 +21,7 @@ export class ActorService {
                     destination: 'uploads/actor',
                 })
                 : null;
-        
+
             const actor = await this.actorModel.create({
                 name: payload.name,
                 bio: payload.bio,
@@ -30,40 +29,25 @@ export class ActorService {
             });
         
             let movieIds: number[] = [];
-        
             if (Array.isArray(payload.movieId)) {
                 movieIds = payload.movieId
-                    .map(id => Number(id))     
-                    .filter(id => !isNaN(id));   
-            } else {
-                const id = Number(payload.movieId);
-                if (!isNaN(id)) {
-                    movieIds = [id];
-                }
+                    .filter(id => !isNaN(Number(id)))
+                    .map(id => Number(id));
+            } else if (!isNaN(Number(payload.movieId))) {
+                movieIds = [Number(payload.movieId)];
             }
         
-            console.log("MovieIds:", movieIds);  
+            console.log("Yangi MovieIds:", movieIds);
         
-            const movies = await this.actorMovieModel.findAll({
-                where: {
-                    movieId: { [Op.in]: movieIds },
-                },
-            });
-        
-            if (movies.length === 0) {
-                console.log("No movies found for the provided movieIds.");
-            } else {
-                console.log("Movies found:", movies);
+            if (movieIds.length > 0) {
+                await this.assignMovieToActor(actor.id, movieIds);
             }
-        
-            console.log("ulanmoqda");
-            const result = await this.assignMovieToActor(actor.id, movieIds);
-            console.log("assign:", result);
         
             return actor;
         }
         
         async assignMovieToActor(actorId: number, movieIds: number[]): Promise<Actor> {
+            console.log(movieIds)
             console.log("ulandi");
             const actor = await this.actorModel.findByPk(actorId);
             if (!actor) {
@@ -72,14 +56,12 @@ export class ActorService {
         
             console.log("Actor ID:", actor.id);
         
-            if (actor) {
-                for (const movie of movieIds) {
-                    await this.actorMovieModel.create({
-                        actorId: actorId,
-                        movieId: movie,
-                    });
-                    console.log(`Assigned actorId: ${actorId} to movieId: ${movie}`);
-                }
+            for (const movie of movieIds) {
+                await this.actorMovieModel.create({
+                    actorId: actorId,
+                    movieId: movie,
+                });
+                console.log(`Assigned actorId: ${actorId} to movieId: ${movie}`);
             }
         
             return actor;
@@ -149,3 +131,10 @@ export class ActorService {
 
 
 }
+
+
+
+
+                // movieIds = payload.movieId
+                //     .map(id => Number(id))     
+                //     .filter(id => !isNaN(id));   

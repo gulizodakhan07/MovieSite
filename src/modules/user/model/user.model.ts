@@ -1,5 +1,5 @@
 import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
-import { Device } from 'src/modules/device/model/device.model'; // To'liq yo'lni tekshirish
+import { Device } from 'src/modules/device/model/device.model';
 
 export enum UserRoles {
   user = 'USER',
