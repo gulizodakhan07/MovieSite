@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { CreateMovieRequest } from '../interface/createMovie.interface';
 
 export class CreateMovieDto implements Omit<CreateMovieRequest, 'id'> {

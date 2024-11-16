@@ -9,8 +9,10 @@ export class CreateActorDto implements Omit<CreateActorrequest,'id'>{
     @IsString()
     @IsNotEmpty()
     bio: string
+
+    @IsOptional()
     image: any
 
     @IsOptional()
-    movieId?: number[];
+    movieIds?: number[];
 }

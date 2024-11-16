@@ -24,9 +24,9 @@ export class UploadService {
 
     // GET FILE'S FULL PATH
     const uploadDir = path.join(__dirname, '../../../', payload.destination);
-    console.log(uploadDir);
+    // console.log(uploadDir);
     const fullFilePath = path.join(uploadDir, fileName);
-    console.log(fullFilePath);
+    // console.log(fullFilePath);
 
     // CREATE UPLOAD FOLDER IF DESTINATION IS NOT FOUND
     if (!fs.existsSync(uploadDir)) {
